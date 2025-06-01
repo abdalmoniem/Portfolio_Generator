@@ -1,0 +1,350 @@
+{
+  "name": "AbdElMoniem Osama Fathallah Mohamed ElHifnawy",
+  "label": "Software Engineer",
+  "image_path": "img/mn3m.jpg",
+  "contact": [
+    {
+      "email": "abdalmoniemalhifnawy@gmail.com",
+      "phone": "+48 519 861 386",
+      "location": "Mierzyn, Poland"
+    },
+    {
+      "email": "hifnawy_moniem@hotmail.com",
+      "phone": "+20 155 406 1017"
+    }
+  ],
+  "summary": "I’m a Software Engineer with over 8 years of experience in Software Engineering, I specialize in a broad range of areas including Embedded Systems, Linux, Robotics, Android Development, Game Development, Database Administration, System Administration, CI/CD Automation, and Diagnostic Systems. I thrive in challenging environments, actively collaborating with cross-functional teams to optimize workfows and improve system reliability.",
+  "base_url": "127.0.0.1:5500",
+  "social_links": [
+    {
+      "label": "LinkedIn",
+      "url": "https://linkedin.com/in/abdalmoniem-alhifnawy",
+      "svg_path": "img/linkedin.svg"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/abdalmoniem",
+      "svg_path": "img/github.svg"
+    }
+  ],
+  "work_experience": [
+    {
+      "company": "GlobalLogic Poland",
+      "position": "Senior Software Engineer",
+      "url": "https://globallogic.com",
+      "start_date": "Mar/2023",
+      "end_date": "Present",
+      "summary": "GlobalLogic is a digital services company providing software product design and  development services. It is an independent subsidiary of Hitachi Ltd.",
+      "highlights": [
+        "Worked with Jenkins to automate CI/CD pipelines, manage build processes, and integrate with various tools for testing and deployment.",
+        "Configured Jenkins jobs, pipelines, and plugins to optimize software delivery workflows.",
+        "Worked with the AUTOSAR Diagnostic Stack, focusing on Diagnostic Data Identifer (DID) implementations and overall diagnostic stack activities.",
+        "Developed and confgured diagnostic services, ensuring compliance with UDS.",
+        "Integrated diagnostic protocols, managed DTCs, and optimized ECU communication strategies for robust vehicle diagnostics.",
+        "Worked with Robot Framework for test automation, focusing on keyword-driven testing and integration with various libraries",
+        "Designed, implemented and fixed automated test cases for validating software functionality, ensuring reliability and efficiency in testing processes.",
+        "Configured CI/CD pipelines to execute Robot Framework tests and generate detailed reports.",
+        "Wrote various scripts to help improve the development process.",
+        "Wrote a script to automate discovery, reservation and connection to remote Test Rigs.",
+        "Wrote a VSCode extension to populate the tasks.json file with Make targets from the project, open various tools used by the project and connect to Test Rigs.",
+        "Wrote a script to analyze map fles to verify correct Linker Sections allocation of various codes objects.",
+        "Created an automated script to configure and use MCDS on GreenHills Multi IDE that enables monitoring OS tasks in real-time, chart them, and create a snapshot of the currently running tasks and save them for latter analysis.",
+        "Conduct thorough and meticulous E2E FSM testing to ensure the comprehensive validation of system functionalities, adhering to industry best practices and quality standards.",
+        "Develop precise and comprehensive test specifcations within DOORs, demonstrating a deep understanding of system architecture and test design principles.",
+        "Execute test scenarios with a focus on precision and accuracy, navigating complex system pathways to identify and report any discrepancies while ensuring the robustness of the system.",
+        "Analyze Problem Reports with a methodical approach, identifying root causes and implementing effective solutions to rectify issues promptly, contributing to the continuous improvement of system reliability.",
+        "Maintain the highest standards of documentation by updating DOORs attributes in alignment with the Process Baseline, demonstrating meticulous attention to detail and adherence to organizational processes."
+      ]
+    },
+    {
+      "company": "Vehiclevo Egypt",
+      "position": "Senior Embedded Software Engineer",
+      "url": "https://vehiclevo.de",
+      "start_date": "May/2022",
+      "end_date": "Mar/2023",
+      "summary": "Vehiclevo is a German automotive software company founded in 2016, specializing in intelligent software architectures for ECUs, with a focus on EVs, infotainment, and autonomous driving. It operates globally, including a development center in Egypt, and is a recognized AUTOSAR partner.",
+      "highlights": [
+        "Creating simulation nodes and panels using Vector CANoe and programming them with CAPL",
+        "Configuring Basic SW with Capital VStar (CVI)",
+        "Configuring AUTOSAR Basic SW and Creating AUTOSAR compatible SW components and Applications",
+        "Configuring GLIWA for multicore microcontrollers task monitoring"
+      ]
+    },
+    {
+      "company": "Valeo",
+      "position": "Embedded Software Engineer",
+      "url": "https://valeo.com",
+      "start_date": "Oct/2018",
+      "end_date": "Apr/2022",
+      "summary": "Valeo is an automotive supplier and partner to automakers worldwide. It is a global leader in the design, production, and sale of components, integrated systems, and modules for the automotive industry.",
+      "highlights": [
+        "Creating simulation nodes and panels using Vector CANoe and programming them with CAPL",
+        "Configuring Basic SW with Vector DaVinci",
+        "Configuring Basic SW with Elektrobit Tresos",
+        "Configuring AUTOSAR Basic SW and Creating AUTOSAR compatible SW components and Applications",
+        "Using IBM DOORs to read customer requirements and creating SRS, CDD and Test Documents",
+        "Creating a variety of tools that help increase efficiency and performance of existing and new projects",
+        "Creating Steering Wheel Switches applications",
+        "Creating and Maintaining Capacitive Touch based solutions for different applications"
+      ]
+    },
+    {
+      "company": "Valeo",
+      "position": "Embedded Software Intern",
+      "url": "https://valeo.com",
+      "start_date": "Mar/2018",
+      "end_date": "Jul/2022"
+    },
+    {
+      "company": "KAN",
+      "position": "Senior Software Engineer",
+      "url": "https://kan4u.com",
+      "start_date": "Dec/2017",
+      "end_date": "Feb/2018",
+      "highlights": [
+        "Developing Android Apps for various clients, managing SQL databases and creating backend servers using Java2EE and JSP"
+      ]
+    },
+    {
+      "company": "Hive Studio",
+      "position": "Game Developer",
+      "url": "https://hivestudio.net",
+      "start_date": "Dec/2017",
+      "end_date": "Feb/2018",
+      "highlights": [
+        "Developing various VR and AR games for various advertising purposes, using Unity3D and C#"
+      ]
+    },
+    {
+      "company": "AL Hadeya For Arabic Software",
+      "position": "Android Developer",
+      "url": "https://www.hadeya.net/",
+      "start_date": "Dec/2017",
+      "end_date": "Feb/2018",
+      "highlights": [
+        "Developing Android Apps for various clients, managing SQL databases and creating backend servers using Java2EE and JSP"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "Hands On Detection",
+      "summary": "Creating steering wheel hands on detection using segmented ADC segments and integrating with autonomous driving and applying gesture detection with which a user can play next/previous song or increase/decrease volume."
+    },
+    {
+      "title": "My Second Project",
+      "summary": "Short summary about my second project",
+      "url": "https://sample.com",
+      "highlights": [
+        "First Highlight of Project Two",
+        "Second Highlight of Project Two",
+        "Third Highlight of Project Two"
+      ],
+      "images": [
+        {
+          "img_path": "https://picsum.photos/600/338?random=4",
+          "caption": "Image Caption 4"
+        },
+        {
+          "img_path": "https://picsum.photos/600/338?random=5",
+          "caption": "Image Caption 5"
+        },
+        {
+          "img_path": "https://picsum.photos/600/338?random=6",
+          "caption": "Image Caption 6"
+        }
+      ]
+    }
+  ],
+  "volunteer_experience": [
+    {
+      "organization": "Latest Organization",
+      "position": "Position One",
+      "url": "https://sample.com",
+      "start_date": "01/01/2020",
+      "end_date": "Present",
+      "summary": "Short summary about present volunteer work",
+      "highlights": [
+        "First Duty of Current Organization",
+        "Second Duty of Current Organization",
+        "Third Duty of Current Organization"
+      ]
+    },
+    {
+      "organization": "Previous Organization",
+      "position": "Position Two",
+      "url": "https://sample.com",
+      "start_date": "01/01/2010",
+      "end_date": "01/01/2020",
+      "summary": "Short summary about previous volunteer work",
+      "highlights": [
+        "First Duty of Previous Organization",
+        "Second Duty of Previous Organization",
+        "Third Duty of Previous Organization"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Helwan University",
+      "location": "Helwan, Egypt",
+      "url": "https://www.helwan.edu.eg",
+      "degrees": [
+        "Bachelor of Engineering"
+      ],
+      "enrollment_date": "Sep/2012",
+      "graduation_date": "Sep/2017"
+    },
+    {
+      "institution": "California Polytechnic State University",
+      "location": "California, USA",
+      "url": "https://www.calpoly.edu",
+      "degrees": [
+        "Training in Robotics"
+      ],
+      "enrollment_date": "Jul/2016",
+      "graduation_date": "Aug/2016"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Robotics",
+      "proficiency": 40
+    },
+    {
+      "name": "ROS",
+      "proficiency": 40
+    },
+    {
+      "name": "Gazebo",
+      "proficiency": 40
+    },
+    {
+      "name": "RViz",
+      "proficiency": 40
+    },
+    {
+      "name": "OpenCV",
+      "proficiency": 60
+    },
+    {
+      "name": "Linux",
+      "proficiency": 80
+    },
+    {
+      "name": "Bash/Shell Scripting",
+      "proficiency": 70
+    },
+    {
+      "name": "Windows",
+      "proficiency": 80
+    },
+    {
+      "name": "Batch Scripting",
+      "proficiency": 80
+    },
+    {
+      "name": "PowerShell Scripting",
+      "proficiency": 80
+    },
+    {
+      "name": "Android",
+      "proficiency": 80
+    },
+    {
+      "name": "SQL",
+      "proficiency": 80
+    },
+    {
+      "name": "Embedded Systems",
+      "proficiency": 80
+    },
+    {
+      "name": "Programming",
+      "proficiency": 80
+    },
+    {
+      "name": "Visual BASIC",
+      "proficiency": 60
+    },
+    {
+      "name": "C",
+      "proficiency": 80
+    },
+    {
+      "name": "C++",
+      "proficiency": 40
+    },
+    {
+      "name": "C#",
+      "proficiency": 50
+    },
+    {
+      "name": "Java",
+      "proficiency": 80
+    },
+    {
+      "name": "Kotlin",
+      "proficiency": 60
+    },
+    {
+      "name": "Python",
+      "proficiency": 80
+    },
+    {
+      "name": "Perl",
+      "proficiency": 40
+    },
+    {
+      "name": "GO",
+      "proficiency": 40
+    },
+    {
+      "name": "Rust",
+      "proficiency": 40
+    },
+    {
+      "name": "JavaScript",
+      "proficiency": 80
+    },
+    {
+      "name": "TypeScript",
+      "proficiency": 80
+    },
+    {
+      "name": "PHP",
+      "proficiency": 80
+    },
+    {
+      "name": "Swift",
+      "proficiency": 40
+    },
+    {
+      "name": "Objective-C",
+      "proficiency": 40
+    },
+    {
+      "name": "Scala",
+      "proficiency": 40
+    },
+    {
+      "name": "Lisp",
+      "proficiency": 40
+    }
+  ],
+  "interests": [
+    {
+      "name": "Fishing"
+    }
+  ],
+  "languages": [
+    {
+      "name": "Arabic",
+      "fluency": "Native speaker"
+    },
+    {
+      "name": "English",
+      "fluency": "Professional Working Proficiency"
+    }
+  ]
+}

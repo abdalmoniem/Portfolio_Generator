@@ -1,0 +1,13 @@
+[project]
+name = "portfolio-generator-main"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dacite>=1.9.2",
+    "jinja2>=3.1.6",
+    "livereload>=2.7.1",
+    "pdfkit>=1.0.0",
+    "watchdog>=6.0.0",
+]
