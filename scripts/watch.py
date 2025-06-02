@@ -17,20 +17,23 @@ from sys import executable as python_executable
 HOST = "localhost"
 PORT = 8000
 SCRIPT_DIR = Path(__file__).resolve().parent
-SCRIPT_TO_RUN = f"{SCRIPT_DIR}/generate_portfolio.py"
+TEMPLATES_DIR = SCRIPT_DIR / "../templates"
+SCRIPT_TO_RUN = SCRIPT_DIR / "generate_portfolio.py"
 
-watched_files = [
+watched_paths = [
     SCRIPT_TO_RUN,
-    f"{SCRIPT_DIR}/../templates/portfolio.json",
-    f"{SCRIPT_DIR}/../templates/index_template.html",
-    f"{SCRIPT_DIR}/../templates/resume_template.html",
-    f"{SCRIPT_DIR}/../templates/resume_pdf_template.html",
+    TEMPLATES_DIR / "portfolio.json",
+    TEMPLATES_DIR / "index_template.html",
+    TEMPLATES_DIR / "resume_template.html",
+    TEMPLATES_DIR / "resume_pdf_template.html",
+    TEMPLATES_DIR / "favicon.ico",
+    TEMPLATES_DIR / "css",
+    TEMPLATES_DIR / "img",
+    TEMPLATES_DIR / "js",
 ]
 
-for file in Path(f"{SCRIPT_DIR}/../templates/css").glob("*.css"):
-    watched_files.append(str(file))
 
-def run_script(changed_file: Optional[str] = None) -> None:
+def run_script(changed_path: Optional[Path] | Optional[list[str]] = None) -> None:
     """
     Executes a specified script and handles changes to files.
 
@@ -48,17 +51,33 @@ def run_script(changed_file: Optional[str] = None) -> None:
                                       which triggers the script execution.
     """
 
-    if changed_file:
-        print(f"Detected change in {changed_file}!")
+    if isinstance(changed_path, list):
+        for file in changed_path:
+            print(f"Detected change in {file}!")
+    elif isinstance(changed_path, Path):
+        print(f"Detected change in {changed_path}!")
 
     print(f"Running {SCRIPT_TO_RUN}...")
     run([python_executable, SCRIPT_TO_RUN], check=True)
     print(f"Script {SCRIPT_TO_RUN} finished!")
 
-    if changed_file and changed_file.endswith(".html"):
-        served_file = changed_file.replace("_template", "")
-        print(f"Reloading {served_file}...")
-        print("Reloading browser...")
+    if changed_path:
+        if isinstance(changed_path, Path) and changed_path.suffix == ".html":
+            new_name = changed_path.name.replace("_template", "")
+            served_file = changed_path.with_name(new_name)
+
+            print(f"Reloading {served_file}...")
+            print("Reloading browser...")
+
+        elif isinstance(changed_path, list):
+            for path in changed_path:
+                path = Path(path)
+                if path.suffix == ".html":
+                    new_name = path.name.replace("_template", "")
+                    served_file = path.with_name(new_name)
+
+                    print(f"Reloading {served_file}...")
+                    print("Reloading browser...")
 
 
 def main() -> None:
@@ -81,13 +100,27 @@ def main() -> None:
 
     run_script()
 
+    watched_dirs = filter(lambda path: path.is_dir(), watched_paths)
+    watched_files = filter(lambda path: path.is_file(), watched_paths)
+
     server = Server()
+
+    # Watch individual files
     for file in watched_files:
-        server.watch(file, lambda changed_file=file: run_script(changed_file))
+        server.watch(
+            filepath=str(file), func=lambda changed_file=file: run_script(changed_file)
+        )
+
+    # Watch directories recursively
+    for dir in watched_dirs:
+        server.watch(
+            filepath=str(dir / "**/*"),
+            func=lambda changed_file=dir: run_script(changed_file),
+        )
 
     # Serve current directory (so output.html is served)
     print(f"Serving on http://{HOST}:{PORT} (LiveReload enabled)")
-    server.serve(root=f"{SCRIPT_DIR}/../generated", port=PORT, host=HOST)
+    server.serve(root=SCRIPT_DIR / "../generated", port=PORT, host=HOST)
 
 
 if __name__ == "__main__":

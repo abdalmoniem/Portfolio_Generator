@@ -25,7 +25,9 @@ Example usage:
 
 """
 
+import os
 import json
+import shutil
 import pdfkit
 from pathlib import Path
 from dacite import from_dict
@@ -280,26 +282,27 @@ def main() -> None:
     """
 
     SCRIPT_DIR = Path(__file__).resolve().parent
-    TEMPLATES_DIR = Path(f"{SCRIPT_DIR}/../templates").resolve()
-    GENERATED_DIR = Path(f"{SCRIPT_DIR}/../generated").resolve()
-    portfolio_path = Path(f"{TEMPLATES_DIR}/portfolio.json").resolve()
-    index_template_path = Path(f"{TEMPLATES_DIR}/index_template.html").resolve()
-    resume_template_path = Path(f"{TEMPLATES_DIR}/resume_template.html").resolve()
-    resume_pdf_template_path = Path(
-        f"{TEMPLATES_DIR}/resume_pdf_template.html"
-    ).resolve()
-    index_path = Path(f"{GENERATED_DIR}/index.html").resolve()
-    resume_path = Path(f"{GENERATED_DIR}/resume.html").resolve()
-    resume_pdf_path = Path(f"{GENERATED_DIR}/resume_pdf.html").resolve()
-    pdf_output_path = Path(f"{GENERATED_DIR}/resume.pdf").resolve()
+    TEMPLATES_DIR = SCRIPT_DIR / "../templates"
+    GENERATED_DIR = SCRIPT_DIR / "../generated"
+    portfolio_path = TEMPLATES_DIR / "portfolio.json"
+    index_template_path = TEMPLATES_DIR / "index_template.html"
+    resume_template_path = TEMPLATES_DIR / "resume_template.html"
+    resume_pdf_template_path = TEMPLATES_DIR / "resume_pdf_template.html"
+    index_path = GENERATED_DIR / "index.html"
+    resume_path = GENERATED_DIR / "resume.html"
+    resume_pdf_path = GENERATED_DIR / "resume_pdf.html"
+    pdf_output_path = GENERATED_DIR / "resume.pdf"
 
     # Ensure the generated directory exists
     if not GENERATED_DIR.exists():
         print(f"Creating directory: {GENERATED_DIR}")
         GENERATED_DIR.mkdir(parents=True, exist_ok=True)
+    else:
+        print(f"Clearing directory: {GENERATED_DIR}")
+        delete_dir_contents(GENERATED_DIR)
 
     # Load JSON data
-    with Path(portfolio_path).open(encoding="utf-8") as file_handle:
+    with portfolio_path.open(encoding="utf-8") as file_handle:
         raw_data = json.load(file_handle)
         portfolio = from_dict(data_class=Portfolio, data=raw_data)
 
@@ -308,9 +311,7 @@ def main() -> None:
     if portfolio.social_links:
         for link in portfolio.social_links:
             if link.svg_path:
-                with Path(f"{TEMPLATES_DIR}/{link.svg_path}").open(
-                    encoding="utf-8"
-                ) as svg_file:
+                with (TEMPLATES_DIR / link.svg_path).open(encoding="utf-8") as svg_file:
                     link.svg_data = svg_file.read()
 
     # Set up Jinja environment
@@ -323,6 +324,44 @@ def main() -> None:
     html_output = index_template.render(**portfolio.__dict__)
     resume_output = resume_template.render(**portfolio.__dict__)
     resume_pdf_output = resume_pdf_template.render(**portfolio.__dict__)
+
+    print("Copying CSS files...")
+    css_dir = TEMPLATES_DIR / "css"
+    generated_css_dir = SCRIPT_DIR / "../generated/css"
+    generated_css_dir.mkdir(parents=True, exist_ok=True)
+
+    copy_files(
+        src=css_dir,
+        dest=generated_css_dir,
+        pattern="*.css",
+    )
+
+    print("Copying images...")
+    images_dir = TEMPLATES_DIR / "img"
+    favicon_path = TEMPLATES_DIR / "img/favicon.ico"
+    generated_images_dir = SCRIPT_DIR / "../generated/img"
+
+    copy_files(
+        src=images_dir,
+        dest=generated_images_dir,
+        pattern="*.*",
+    )
+
+    copy_files(
+        src=images_dir,
+        dest=GENERATED_DIR,
+        pattern=favicon_path.name,
+    )
+
+    print("Copying JS files...")
+    js_dir = TEMPLATES_DIR / "js"
+    generated_js_dir = SCRIPT_DIR / "../generated/js"
+
+    copy_files(
+        src=js_dir,
+        dest=generated_js_dir,
+        pattern="*.js",
+    )
 
     # Write the output to an HTML file
     with index_path.open("w", encoding="utf-8") as file_handle:
@@ -353,7 +392,7 @@ def main() -> None:
     status = pdfkit.from_file(
         input=str(resume_pdf_path),
         output_path=str(pdf_output_path),
-        # verbose=True,
+        verbose=True,
         options={
             "enable-local-file-access": "",  # Required for local CSS/images
             "load-error-handling": "ignore",  # Suppress errors on loading
@@ -367,47 +406,46 @@ def main() -> None:
     else:
         print(f"Failed to generate {pdf_output_path.name}.")
 
-    print("Copying CSS files...")
-    css_dir = Path(f"{TEMPLATES_DIR}/css")
-    generated_css_dir = Path(f"{SCRIPT_DIR}/../generated/css")
-    generated_css_dir.mkdir(parents=True, exist_ok=True)
 
-    copy_files(
-        src=css_dir,
-        dest=generated_css_dir,
-        pattern="*.css",
-    )
+def delete_dir_contents(path: Path) -> None:
+    """
+    Deletes the contents of a given directory.
 
-    print("Copying images...")
-    images_dir = Path(f"{TEMPLATES_DIR}/img")
-    favicon_path = Path(f"{TEMPLATES_DIR}/img/favicon.ico")
-    generated_images_dir = Path(f"{SCRIPT_DIR}/../generated/img")
-    
-    copy_files(
-        src=images_dir,
-        dest=generated_images_dir,
-        pattern="*.*",
-    )
+    This function is used to remove the previous build of the website
+    before generating a new one.
 
-    copy_files(
-        src=images_dir,
-        dest=GENERATED_DIR,
-        pattern=favicon_path.name,
-    )
+    Args:
+        path (Path): The path to the directory to be cleaned.
+    """
 
-    print("Copying JS files...")
-    js_dir = Path(f"{TEMPLATES_DIR}/js")
-    generated_js_dir = Path(f"{SCRIPT_DIR}/../generated/js")
-    
-    copy_files(
-        src=js_dir,
-        dest=generated_js_dir,
-        pattern="*.js",
-    )
+    for filename in os.listdir(path):
+        file_path = os.path.join(path, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)  # remove file or symlink
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)  # remove directory and its contents
+        except Exception as e:
+            print(f"Failed to delete {file_path}. Reason: {e}")
 
 
 def copy_files(src: Path, dest: Path, pattern: str = "*.*") -> None:
-    """Copy files from source to destination directory matching a pattern."""
+    """
+    Copies files from a source directory to a destination directory.
+
+    This function searches for files in the source directory matching the
+    specified pattern and copies them to the destination directory. If the
+    destination directory does not exist, it is created. The function reads
+    the content of each file in binary mode and writes it to the corresponding
+    file in the destination directory.
+
+    Args:
+        src (Path): The path to the source directory containing files to copy.
+        dest (Path): The path to the destination directory where files are copied.
+        pattern (str, optional): A glob pattern to match files in the source
+                                 directory. Defaults to "*.*".
+    """
+
     dest.mkdir(parents=True, exist_ok=True)
     for file in src.glob(pattern):
         target_path = dest / file.name
