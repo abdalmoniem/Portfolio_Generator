@@ -156,46 +156,6 @@
          </section>
          {% endif %}
 
-         {% if projects %}
-         <section>
-            <h2 class="section-heading">Projects</h2>
-            {% for project in projects %}
-            <section>
-               <h3>
-                  {% if project.url %}
-                  <a href="{{ project.url }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
-                  {% else %}
-                  {{ project.title }}
-                  {% endif %}
-               </h3>
-               {% if project.summary %}<p>{{ project.summary }}</p>{% endif %}
-               {% if project.highlights %}
-               <ul>
-                  {% for highlight in project.highlights %}
-                  <li>
-                     {{ highlight }}
-                  </li>
-                  {% endfor %}
-               </ul>
-               {% endif %}
-               {% if project.tools %}
-               <h4>Tools</h4>
-               <p>
-                  {% for tool in project.tools %}
-                  {% if loop.last %}
-                  {{ tool }}.
-                  {% else %}
-                  {{ tool }},
-                  {% endif %}
-                  {% endfor %}
-               </p>
-               {% endif %}
-            </section>
-            {% endfor %}
-         </section>
-         {% endif %}
-
-
          {% if education %}
          <section>
             <h2 class="section-heading">Education</h2>
@@ -230,6 +190,43 @@
                <p class="section-label">{{ edu.enrollment_date }} - {{ edu.graduation_date }}</p>
                {% endif %}
                </p>
+               {% endif %}
+            </section>
+            {% endfor %}
+         </section>
+         {% endif %}
+
+         {% if projects %}
+         <section>
+            <h2 class="section-heading">Projects</h2>
+            {% for project in projects %}
+            <section>
+               <h3>
+                  {% if project.url %}
+                  <a href="{{ project.url }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
+                  {% else %}
+                  {{ project.title }}
+                  {% endif %}
+               </h3>
+               {% if project.summary %}<p>{{ project.summary }}</p>{% endif %}
+               {% if project.highlights %}
+               <ul>
+                  {% for highlight in project.highlights %}
+                  <li>
+                     {{ highlight }}
+                  </li>
+                  {% endfor %}
+               </ul>
+               {% endif %}
+               {% if project.tools %}
+               <p style="font-size: small; font-weight: bold;">Tools</p>
+               <ul class="inline-list">
+                  {% for tool in project.tools %}
+                  <li style="font-size: small; font-style: italic;">
+                     {{ tool }}
+                  </li>
+                  {% endfor %}
+               </ul>
                {% endif %}
             </section>
             {% endfor %}
