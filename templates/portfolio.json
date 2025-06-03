@@ -1,5 +1,7 @@
 {
-  "name": "AbdElMoniem Osama Fathallah Mohamed ElHifnawy",
+  "first_name": "AbdElMoniem",
+  "middle_name": "Osama Fathallah Mohamed",
+  "last_name": "ElHifnawy",
   "label": "Software Engineer",
   "image_path": "img/mn3m.jpg",
   "contact": [
@@ -397,11 +399,6 @@
       "summary": "Participated as a mobile apps and ROS developers’ mentor"
     }
   ],
-  "interests": [
-    {
-      "name": "Fishing"
-    }
-  ],
   "languages": [
     {
       "name": "Arabic",
@@ -410,6 +407,11 @@
     {
       "name": "English",
       "fluency": "Professional Working Proficiency"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Fishing"
     }
   ]
 }

@@ -26,9 +26,9 @@ Example usage:
 """
 
 import os
-import json
 import shutil
 import pdfkit
+import pyjson5
 from pathlib import Path
 from dacite import from_dict
 from datetime import datetime
@@ -93,6 +93,33 @@ class WorkExperience:
 
 
 @dataclass
+class Education:
+    """Education class
+
+    Attributes:
+        institution (str): Institution of the education
+        location (str): Location of the institution
+        url (str): URL of the institution
+        degrees (list[str]): Degrees of the education
+        honors (list[str]): Honors of the education
+        gpa_cumulative (str): Cumulative GPA of the education
+        gpa_major (str): Major GPA of the education
+        enrollment_date (str): Enrollment date of the education
+        graduation_date (str): Graduation date of the education
+    """
+
+    institution: str
+    location: str
+    url: Optional[str]
+    degrees: List[str]
+    honors: Optional[List[str]]
+    gpa_cumulative: Optional[str]
+    gpa_major: Optional[str]
+    enrollment_date: str
+    graduation_date: str
+
+
+@dataclass
 class ProjectImage:
     """Project image class
 
@@ -127,6 +154,21 @@ class Project:
 
 
 @dataclass
+class Skill:
+    """Skill class
+
+    Attributes:
+        name (str): Name of the skill
+        proficiency (int): Proficiency of the skill
+        proficiency_label (str): Proficiency label of the skill
+    """
+
+    name: str
+    proficiency: Optional[int]
+    proficiency_label: Optional[str]
+
+
+@dataclass
 class VolunteerExperience:
     """Volunteer experience class
 
@@ -147,48 +189,6 @@ class VolunteerExperience:
     end_date: str
     summary: Optional[str]
     highlights: Optional[List[str]]
-
-
-@dataclass
-class Education:
-    """Education class
-
-    Attributes:
-        institution (str): Institution of the education
-        location (str): Location of the institution
-        url (str): URL of the institution
-        degrees (list[str]): Degrees of the education
-        honors (list[str]): Honors of the education
-        gpa_cumulative (str): Cumulative GPA of the education
-        gpa_major (str): Major GPA of the education
-        enrollment_date (str): Enrollment date of the education
-        graduation_date (str): Graduation date of the education
-    """
-
-    institution: str
-    location: str
-    url: Optional[str]
-    degrees: List[str]
-    honors: Optional[List[str]]
-    gpa_cumulative: Optional[str]
-    gpa_major: Optional[str]
-    enrollment_date: str
-    graduation_date: str
-
-
-@dataclass
-class Skill:
-    """Skill class
-
-    Attributes:
-        name (str): Name of the skill
-        proficiency (int): Proficiency of the skill
-        proficiency_label (str): Proficiency label of the skill
-    """
-
-    name: str
-    proficiency: Optional[int]
-    proficiency_label: Optional[str]
 
 
 @dataclass
@@ -254,7 +254,9 @@ class Portfolio:
         current_year (Optional[int]): The current year
     """
 
-    name: str
+    first_name: str
+    middle_name: Optional[str]
+    last_name: str
     label: str
     image_path: str
     contact: List[ContactInfo]
@@ -285,13 +287,6 @@ def main() -> None:
     TEMPLATES_DIR = SCRIPT_DIR / "../templates"
     GENERATED_DIR = SCRIPT_DIR / "../generated"
     portfolio_path = TEMPLATES_DIR / "portfolio.json"
-    index_template_path = TEMPLATES_DIR / "index_template.html"
-    resume_template_path = TEMPLATES_DIR / "resume_template.html"
-    resume_pdf_template_path = TEMPLATES_DIR / "resume_pdf_template.html"
-    index_path = GENERATED_DIR / "index.html"
-    resume_path = GENERATED_DIR / "resume.html"
-    resume_pdf_path = GENERATED_DIR / "resume_pdf.html"
-    pdf_output_path = GENERATED_DIR / "resume.pdf"
 
     # Ensure the generated directory exists
     if not GENERATED_DIR.exists():
@@ -303,9 +298,10 @@ def main() -> None:
 
     # Load JSON data
     with portfolio_path.open(encoding="utf-8") as file_handle:
-        raw_data = json.load(file_handle)
+        raw_text = file_handle.read()
+        raw_data = pyjson5.loads(raw_text)
         portfolio = from_dict(data_class=Portfolio, data=raw_data)
-
+    
     portfolio.current_year = datetime.now().year
 
     if portfolio.social_links:
@@ -313,6 +309,14 @@ def main() -> None:
             if link.svg_path:
                 with (TEMPLATES_DIR / link.svg_path).open(encoding="utf-8") as svg_file:
                     link.svg_data = svg_file.read()
+
+    index_template_path = TEMPLATES_DIR / "index_template.html"
+    resume_template_path = TEMPLATES_DIR / "resume_template.html"
+    resume_pdf_template_path = TEMPLATES_DIR / "resume_pdf_template.html"
+    index_path = GENERATED_DIR / "index.html"
+    resume_path = GENERATED_DIR / "resume.html"
+    resume_pdf_path = GENERATED_DIR / "resume_pdf.html"
+    pdf_output_path = GENERATED_DIR / f"{portfolio.first_name} {portfolio.last_name} Résumé.pdf"
 
     # Set up Jinja environment
     env = Environment(loader=FileSystemLoader(TEMPLATES_DIR), autoescape=True)
