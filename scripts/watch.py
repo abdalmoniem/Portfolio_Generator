@@ -47,8 +47,9 @@ def run_script(changed_path: Optional[Path] | Optional[list[str]] = None) -> Non
     indicating the need to reload the served file and the browser.
 
     Args:
-        changed_file (Optional[str]): The name of the file that has changed,
-                                      which triggers the script execution.
+        changed_file (Optional[Path] | Optional[list[str]]): The path to the
+            changed file or a list of changed file paths. If None, no specific
+            file change is detected.
     """
 
     if isinstance(changed_path, list):

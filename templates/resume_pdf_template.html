@@ -6,7 +6,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
    <!-- Site Info -->
-   <title>{{ first_name }} {{ last_name }} - Resume</title>
+   <title>{{ portfolio.first_name }} {{ portfolio.last_name }} - Resume</title>
    <meta name="description" content="{{ first_name }} - {{ summary }}">
    <meta name="author" content="{{ first_name }} {{ last_name }}">
 
@@ -120,10 +120,10 @@
 
    <div class="page-content">
       <main>
-         {% if work_experience %}
+         {% if portfolio.work_experience %}
          <section>
             <h2 class="section-heading">Work Experience</h2>
-            {% for job in work_experience %}
+            {% for job in portfolio.work_experience %}
             <section>
                <h3>
                   {% if job.url %}
@@ -157,10 +157,10 @@
          </section>
          {% endif %}
 
-         {% if education %}
+         {% if portfolio.education %}
          <section>
             <h2 class="section-heading">Education</h2>
-            {% for edu in education %}
+            {% for edu in portfolio.education %}
             <section>
                <h3>
                   {% if edu.url %}
@@ -197,10 +197,10 @@
          </section>
          {% endif %}
 
-         {% if projects %}
+         {% if portfolio.projects %}
          <section>
             <h2 class="section-heading">Projects</h2>
-            {% for project in projects %}
+            {% for project in portfolio.projects %}
             <section>
                <h3>
                   {% if project.url %}
@@ -234,11 +234,11 @@
          </section>
          {% endif %}
 
-         {% if skills %}
+         {% if portfolio.skills %}
          <section>
             <h2 class="section-heading">Skills</h2>
             <ul class="four-column-list">
-               {% for skill in skills %}
+               {% for skill in portfolio.skills %}
                <li>
                   <p style="font-size: 10px; font-weight: bold;">{{ skill.name }}</p>
                   <!-- <h3>{{ skill.name }}</h3> -->
@@ -258,10 +258,10 @@
          </section>
          {% endif %}
 
-         {% if volunteer_experience %}
+         {% if portfolio.volunteer_experience %}
          <section>
             <h2 class="section-heading">Volunteer Experience</h2>
-            {% for vol in volunteer_experience %}
+            {% for vol in portfolio.volunteer_experience %}
             <section>
                <h3>
                   {% if vol.url %}
@@ -293,11 +293,11 @@
          </section>
          {% endif %}
 
-         {% if languages %}
+         {% if portfolio.languages %}
          <section id="languages">
             <h2 class="section-heading">Languages</h2>
             <ul class="unstyled-list">
-               {% for lang in languages %}
+               {% for lang in portfolio.languages %}
                <li>
                   <h3>{{ lang.name }}</h3>
                   <p class="section-label">{{ lang.fluency }}</p>
@@ -306,6 +306,19 @@
             </ul>
          </section>
          {% endif %}
+
+         {% for memberName, memberValue in extra_fields.items() %}
+         <section>
+            <h2 class="section-heading">{{memberName}}</h2>
+            {% if isinstance(memberValue, list) %}
+            {% for item in memberValue %}
+            <section>
+               <h3>{{ item }}</h3>
+            </section>
+            {% endfor %}
+            {% endif %}
+         </section>
+         {% endfor %}
       </main>
    </div>
    <script src="js/app.js"></script>

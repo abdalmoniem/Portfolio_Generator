@@ -12,11 +12,12 @@
     },
     {
       "email": "hifnawy_moniem@hotmail.com",
-      "phone": "+20 155 406 1017"
+      "phone": "+20 155 406 1017",
+      "location": "Cairo, Egypt"
     }
   ],
   "summary": "I’m a Software Engineer with over 8 years of experience in Software Engineering, I specialize in a broad range of areas including Embedded Systems, Linux, Robotics, Android Development, Game Development, Database Administration, System Administration, CI/CD Automation, and Diagnostic Systems. I thrive in challenging environments, actively collaborating with cross-functional teams to optimize workfows and improve system reliability.",
-  "base_url": "127.0.0.1:5500",
+  "base_url": "localhost:8000",
   "social_links": [
     {
       "label": "LinkedIn",

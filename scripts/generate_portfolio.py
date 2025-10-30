@@ -29,6 +29,7 @@ import os
 import shutil
 import pdfkit
 import pyjson5
+import builtins
 from pathlib import Path
 from dacite import from_dict
 from datetime import datetime
@@ -273,144 +274,6 @@ class Portfolio:
     current_year: Optional[int]
 
 
-def main() -> None:
-    """
-    Main entry point of the script.
-
-    This function loads the Portfolio JSON data, loads the SVG files, sets up the Jinja environment,
-    renders the HTML templates with the data, and writes the output to an HTML file.
-
-    :return: None
-    """
-
-    SCRIPT_DIR = Path(__file__).resolve().parent
-    TEMPLATES_DIR = SCRIPT_DIR / "../templates"
-    GENERATED_DIR = SCRIPT_DIR / "../generated"
-    portfolio_path = TEMPLATES_DIR / "portfolio.json"
-
-    # Ensure the generated directory exists
-    if not GENERATED_DIR.exists():
-        print(f"Creating directory: {GENERATED_DIR}")
-        GENERATED_DIR.mkdir(parents=True, exist_ok=True)
-    else:
-        print(f"Clearing directory: {GENERATED_DIR}")
-        delete_dir_contents(GENERATED_DIR)
-
-    # Load JSON data
-    with portfolio_path.open(encoding="utf-8") as file_handle:
-        raw_text = file_handle.read()
-        raw_data = pyjson5.loads(raw_text)
-        portfolio = from_dict(data_class=Portfolio, data=raw_data)
-    
-    portfolio.current_year = datetime.now().year
-
-    if portfolio.social_links:
-        for link in portfolio.social_links:
-            if link.svg_path:
-                with (TEMPLATES_DIR / link.svg_path).open(encoding="utf-8") as svg_file:
-                    link.svg_data = svg_file.read()
-
-    index_template_path = TEMPLATES_DIR / "index_template.html"
-    resume_template_path = TEMPLATES_DIR / "resume_template.html"
-    resume_pdf_template_path = TEMPLATES_DIR / "resume_pdf_template.html"
-    index_path = GENERATED_DIR / "index.html"
-    resume_path = GENERATED_DIR / "resume.html"
-    resume_pdf_path = GENERATED_DIR / "resume_pdf.html"
-    pdf_output_path = GENERATED_DIR / f"{portfolio.first_name} {portfolio.last_name} Résumé.pdf"
-
-    # Set up Jinja environment
-    env = Environment(loader=FileSystemLoader(TEMPLATES_DIR), autoescape=True)
-    index_template = env.get_template(index_template_path.name)
-    resume_template = env.get_template(resume_template_path.name)
-    resume_pdf_template = env.get_template(resume_pdf_template_path.name)
-
-    # Render the template with the data
-    html_output = index_template.render(**portfolio.__dict__)
-    resume_output = resume_template.render(**portfolio.__dict__)
-    resume_pdf_output = resume_pdf_template.render(**portfolio.__dict__)
-
-    print("Copying CSS files...")
-    css_dir = TEMPLATES_DIR / "css"
-    generated_css_dir = SCRIPT_DIR / "../generated/css"
-    generated_css_dir.mkdir(parents=True, exist_ok=True)
-
-    copy_files(
-        src=css_dir,
-        dest=generated_css_dir,
-        pattern="*.css",
-    )
-
-    print("Copying images...")
-    images_dir = TEMPLATES_DIR / "img"
-    favicon_path = TEMPLATES_DIR / "img/favicon.ico"
-    generated_images_dir = SCRIPT_DIR / "../generated/img"
-
-    copy_files(
-        src=images_dir,
-        dest=generated_images_dir,
-        pattern="*.*",
-    )
-
-    copy_files(
-        src=images_dir,
-        dest=GENERATED_DIR,
-        pattern=favicon_path.name,
-    )
-
-    print("Copying JS files...")
-    js_dir = TEMPLATES_DIR / "js"
-    generated_js_dir = SCRIPT_DIR / "../generated/js"
-
-    copy_files(
-        src=js_dir,
-        dest=generated_js_dir,
-        pattern="*.js",
-    )
-
-    # Write the output to an HTML file
-    with index_path.open("w", encoding="utf-8") as file_handle:
-        written = file_handle.write(html_output)
-
-        if written == len(html_output):
-            print(f"{index_path.name} generated successfully!!")
-        else:
-            print(f"Failed to generate {index_path.name}.")
-
-    with resume_path.open("w", encoding="utf-8") as file_handle:
-        written = file_handle.write(resume_output)
-
-        if written == len(resume_output):
-            print(f"{resume_path.name} generated successfully!!")
-        else:
-            print(f"Failed to generate {resume_path.name}.")
-
-    with resume_pdf_path.open("w", encoding="utf-8") as file_handle:
-        written = file_handle.write(resume_pdf_output)
-
-        if written == len(resume_pdf_output):
-            print(f"{resume_pdf_path.name} generated successfully!!")
-        else:
-            print(f"Failed to generate {resume_pdf_path.name}.")
-
-    # Convert HTML to PDF
-    status = pdfkit.from_file(
-        input=str(resume_pdf_path),
-        output_path=str(pdf_output_path),
-        verbose=True,
-        options={
-            "enable-local-file-access": "",  # Required for local CSS/images
-            "load-error-handling": "ignore",  # Suppress errors on loading
-            "encoding": "UTF-8",
-            "disable-smart-shrinking": "",
-        },
-    )
-
-    if status:
-        print(f"{pdf_output_path.name} generated successfully!!")
-    else:
-        print(f"Failed to generate {pdf_output_path.name}.")
-
-
 def delete_dir_contents(path: Path) -> None:
     """
     Deletes the contents of a given directory.
@@ -457,6 +320,165 @@ def copy_files(src: Path, dest: Path, pattern: str = "*.*") -> None:
             content = source.read()
             target.write(content)
             # print(f"Copied {file.name} to {target_path.name}")
+
+
+def main() -> None:
+    """
+    Main entry point of the script.
+
+    This function loads the Portfolio JSON data, loads the SVG files, sets up the Jinja environment,
+    renders the HTML templates with the data, and writes the output to an HTML file.
+
+    :return: None
+    """
+
+    SCRIPT_DIR = Path(__file__).resolve().parent
+    TEMPLATES_DIR = SCRIPT_DIR / "../templates"
+    GENERATED_DIR = SCRIPT_DIR / "../generated"
+    portfolio_path = TEMPLATES_DIR / "portfolio.json"
+
+    # Ensure the generated directory exists
+    if not GENERATED_DIR.exists():
+        print(f"Creating directory: {GENERATED_DIR}")
+        GENERATED_DIR.mkdir(parents=True, exist_ok=True)
+    else:
+        print(f"Clearing directory: {GENERATED_DIR}")
+        delete_dir_contents(GENERATED_DIR)
+
+    # Load JSON data
+    with portfolio_path.open(encoding="utf-8") as file_handle:
+        raw_text = file_handle.read()
+        raw_data = pyjson5.loads(raw_text)
+        portfolio = from_dict(data_class=Portfolio, data=raw_data)
+
+    portfolio.current_year = datetime.now().year
+
+    if portfolio.social_links:
+        for link in portfolio.social_links:
+            if link.svg_path:
+                with (TEMPLATES_DIR / link.svg_path).open(encoding="utf-8") as svg_file:
+                    link.svg_data = svg_file.read()
+
+    extra_fields = {}
+
+    for key, value in raw_data.items():
+        if not hasattr(portfolio, key):
+            setattr(portfolio, key, value)
+            extra_fields[key] = getattr(portfolio, key)
+
+    index_template_path = TEMPLATES_DIR / "index_template.html"
+    resume_template_path = TEMPLATES_DIR / "resume_template.html"
+    resume_pdf_template_path = TEMPLATES_DIR / "resume_pdf_template.html"
+    index_path = GENERATED_DIR / "index.html"
+    resume_path = GENERATED_DIR / "resume.html"
+    resume_pdf_path = GENERATED_DIR / "resume_pdf.html"
+    pdf_output_path = (
+        GENERATED_DIR / f"{portfolio.first_name} {portfolio.last_name} Résumé.pdf"
+    )
+
+    global_builtins = {name: value for name, value in (builtins.__dict__).items()}
+
+    # Set up Jinja environment
+    env = Environment(loader=FileSystemLoader(TEMPLATES_DIR), autoescape=True)
+    env.globals.update(**global_builtins)
+
+    index_template = env.get_template(index_template_path.name)
+    resume_template = env.get_template(resume_template_path.name)
+    resume_pdf_template = env.get_template(resume_pdf_template_path.name)
+
+    # Render the template with the data
+    html_output = index_template.render(portfolio=portfolio, extra_fields=extra_fields)
+    resume_output = resume_template.render(
+        portfolio=portfolio, extra_fields=extra_fields
+    )
+    resume_pdf_output = resume_pdf_template.render(
+        portfolio=portfolio, extra_fields=extra_fields
+    )
+
+    print("Copying CSS files...")
+    css_dir = TEMPLATES_DIR / "css"
+    generated_css_dir = SCRIPT_DIR / "../generated/css"
+    generated_css_dir.mkdir(parents=True, exist_ok=True)
+
+    copy_files(
+        src=css_dir,
+        dest=generated_css_dir,
+        pattern="*.css",
+    )
+
+    print("Copying images...")
+    images_dir = TEMPLATES_DIR / "img"
+    favicon_path = TEMPLATES_DIR / "img/favicon.ico"
+    generated_images_dir = SCRIPT_DIR / "../generated/img"
+
+    copy_files(
+        src=images_dir,
+        dest=generated_images_dir,
+        pattern="*.*",
+    )
+
+    copy_files(
+        src=images_dir,
+        dest=GENERATED_DIR,
+        pattern=favicon_path.name,
+    )
+
+    print("Copying JS files...")
+    js_dir = TEMPLATES_DIR / "js"
+    generated_js_dir = SCRIPT_DIR / "../generated/js"
+
+    copy_files(
+        src=js_dir,
+        dest=generated_js_dir,
+        pattern="*.js",
+    )
+
+    print(f"Generating {index_path.name} files...")
+    # Write the output to an HTML file
+    with index_path.open("w", encoding="utf-8") as file_handle:
+        written = file_handle.write(html_output)
+
+        if written == len(html_output):
+            print(f"{index_path.name} generated successfully!!")
+        else:
+            print(f"Failed to generate {index_path.name}.")
+
+    print(f"Generating {resume_path.name} files...")
+    with resume_path.open("w", encoding="utf-8") as file_handle:
+        written = file_handle.write(resume_output)
+
+        if written == len(resume_output):
+            print(f"{resume_path.name} generated successfully!!")
+        else:
+            print(f"Failed to generate {resume_path.name}.")
+
+    print(f"Generating {resume_pdf_path.name} files...")
+    with resume_pdf_path.open("w", encoding="utf-8") as file_handle:
+        written = file_handle.write(resume_pdf_output)
+
+        if written == len(resume_pdf_output):
+            print(f"{resume_pdf_path.name} generated successfully!!")
+        else:
+            print(f"Failed to generate {resume_pdf_path.name}.")
+
+    # Convert HTML to PDF
+    print(f"Generating {pdf_output_path.name} file...")
+    status = pdfkit.from_file(
+        input=str(resume_pdf_path),
+        output_path=str(pdf_output_path),
+        verbose=True,
+        options={
+            "enable-local-file-access": "",  # Required for local CSS/images
+            "load-error-handling": "ignore",  # Suppress errors on loading
+            "encoding": "UTF-8",
+            "disable-smart-shrinking": "",
+        },
+    )
+
+    if status:
+        print(f"{pdf_output_path.name} generated successfully!!")
+    else:
+        print(f"Failed to generate {pdf_output_path.name}.")
 
 
 if __name__ == "__main__":

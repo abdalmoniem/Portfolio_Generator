@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Site Info -->
-  <title>{{ first_name }} {{ last_name }} - Portfolio</title>
+  <title>{{ portfolio.first_name }} {{ portfolio.last_name }} - Portfolio</title>
   <meta name="description" content="{{ first_name }} {{ last_name }} - {{ summary }}">
   <meta name="author" content="{{ first_name }} {{ last_name }}">
 
@@ -56,14 +56,16 @@
   <header class="page-header">
     <div class="container">
       <div class="header-top flex-responsive">
-        {% if image_path %}
-        <img class="header-image" width="256" height="256" src="{{ image_path }}" alt="{{ first_name }} {{ last_name }} Profile Image" />
+        {% if portfolio.image_path %}
+        <img class="header-image" width="256" height="256" src="{{ portfolio.image_path }}"
+          alt="{{ portfolio.first_name }} {{ portfolio.last_name }} Profile Image" />
         {% endif %}
         <div class="header-info">
-          <h1>{{ first_name }} {% if middle_name %} {{ middle_name }} {% endif %} {{ last_name }}</h1>
-          {% if label %}<h2 class="header-label">{{ label }}</h2>{% endif %}
-          {% if contact %}
-          {% for info in contact %}
+          <h1>{{ portfolio.first_name }} {% if portfolio.middle_name %} {{portfolio. middle_name }} {% endif %} {{
+            portfolio.last_name }}</h1>
+          {% if portfolio.label %}<h2 class="header-label">{{ portfolio.label }}</h2>{% endif %}
+          {% if portfolio.contact %}
+          {% for info in portfolio.contact %}
           {% if info.email or info.phone or info.location %}
           <address>
             <ul class="inline-list flex-responsive">
@@ -87,7 +89,7 @@
           {% endif %}
           {% endfor %}
           {% endif %}
-          {% if social_links %}
+          {% if portfolio.social_links %}
           <ul class="inline-list flex-responsive">
             {% for link in social_links %}
             <li>
@@ -99,7 +101,7 @@
             {% endfor %}
           </ul>
           {% endif %}
-          {% if summary %}<p class="header-summary">{{ summary }}</p>{% endif %}
+          {% if portfolio.summary %}<p class="header-summary">{{ portfolio.summary }}</p>{% endif %}
         </div>
       </div>
     </div>
@@ -108,10 +110,10 @@
   <div class="page-content">
     <div class="container">
       <main>
-        {% if work_experience %}
+        {% if portfolio.work_experience %}
         <section>
           <h2 class="section-heading">Work Experience</h2>
-          {% for job in work_experience %}
+          {% for job in portfolio.work_experience %}
           <section>
             <h3>
               {% if job.url %}
@@ -135,10 +137,10 @@
         </section>
         {% endif %}
 
-        {% if projects %}
+        {% if portfolio.projects %}
         <section>
           <h2 class="section-heading">Projects</h2>
-          {% for project in projects %}
+          {% for project in portfolio.projects %}
           <section>
             <h3>
               {% if project.url %}
@@ -184,10 +186,10 @@
         </section>
         {% endif %}
 
-        {% if volunteer_experience %}
+        {% if portfolio.volunteer_experience %}
         <section>
           <h2 class="section-heading">Volunteer Experience</h2>
-          {% for vol in volunteer_experience %}
+          {% for vol in portfolio.volunteer_experience %}
           <section>
             <h3>
               {% if vol.url %}
@@ -210,10 +212,10 @@
         </section>
         {% endif %}
 
-        {% if references %}
+        {% if portfolio.references %}
         <section>
           <h2 class="section-heading">References</h2>
-          {% for ref in references %}
+          {% for ref in portfolio.references %}
           <section>
             {% if ref.name %}<h3>{{ ref.name }}</h3>{% endif %}
             {% if ref.relation %}<p class="section-label">{{ ref.relation }}</p>{% endif %}
@@ -230,10 +232,10 @@
 
       <!-- Sidebar Section -->
       <aside>
-        {% if education %}
+        {% if portfolio.education %}
         <section>
           <h2 class="section-heading">Education</h2>
-          {% for edu in education %}
+          {% for edu in portfolio.education %}
           <section>
             <h3>
               {% if edu.url %}
@@ -269,11 +271,11 @@
         </section>
         {% endif %}
 
-        {% if skills %}
+        {% if portfolio.skills %}
         <section>
           <h2 class="section-heading">Skills</h2>
           <ul class="unstyled-list">
-            {% for skill in skills %}
+            {% for skill in portfolio.skills %}
             <li>
               <h3>{{ skill.name }}</h3>
               <div class="skill-bar">
@@ -292,11 +294,11 @@
         </section>
         {% endif %}
 
-        {% if languages %}
+        {% if portfolio.languages %}
         <section>
           <h2 class="section-heading">Languages</h2>
           <ul class="unstyled-list">
-            {% for language in languages %}
+            {% for language in portfolio.languages %}
             <li>
               <h3>{{ language.name }}</h3>
               <p class="section-label">{{ language.fluency }}</p>
@@ -306,10 +308,10 @@
         </section>
         {% endif %}
 
-        {% if interests %}
+        {% if portfolio.interests %}
         <section>
           <h2 class="section-heading">Interests</h2>
-          {% for interest in interests %}
+          {% for interest in portfolio.interests %}
           <section>
             <h3>{{ interest.name }}</h3>
             {% if interest.summary %}<p>{{ interest.summary }}</p>{% endif %}
@@ -327,13 +329,28 @@
           {% endfor %}
         </section>
         {% endif %}
+
+        {% for memberName, memberValue in extra_fields.items() %}
+        <section>
+          <h2 class="section-heading">{{memberName}}</h2>
+          {% if isinstance(memberValue, list) %}
+          {% for item in memberValue %}
+          <section>
+            <h3>{{ item }}</h3>
+          </section>
+          {% endfor %}
+          {% endif %}
+        </section>
+        {% endfor %}
       </aside>
     </div>
   </div>
 
   <footer class="page-footer">
     <div class="container">
-      <p>© {{ current_year }} {{ first_name }} {% if middle_name %} {{ middle_name }} {% endif %} {{ last_name }}. All rights reserved.</p>
+      <p>© {{ portfolio.current_year }} {{ portfolio.first_name }} {% if portfolio.middle_name %} {{
+        portfolio.middle_name }} {% endif %} {{ last_name }}. All
+        rights reserved.</p>
     </div>
   </footer>
 
